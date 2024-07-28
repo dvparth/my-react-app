@@ -1,5 +1,6 @@
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useState } from "react";
 import { useRenderCount } from "./useRenderCount";
+import PropTypes from "prop-types";
 
 const ProductAddComponent = ({ accountTypes, onAdd }) => {
   useRenderCount("ProductAddComponent", true);
@@ -47,4 +48,13 @@ const ProductAddComponent = ({ accountTypes, onAdd }) => {
   );
 };
 
+ProductAddComponent.propTypes = {
+  accountTypes: PropTypes.arrayOf(
+    PropTypes.shape({
+      code: PropTypes.number.isRequired,
+      description: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  onAdd: PropTypes.func.isRequired,
+};
 export default memo(ProductAddComponent);

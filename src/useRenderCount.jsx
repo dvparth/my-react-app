@@ -13,14 +13,3 @@ export const useRenderCount = (
   });
   return renderCount.current;
 };
-
-export const RenderCount = ({ name }) => {
-  const renderCount = useRenderCount();
-  return (
-    <div>
-      <h6>
-        Render Count for - {name}- {renderCount}
-      </h6>
-    </div>
-  );
-};

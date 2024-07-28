@@ -11,11 +11,14 @@ const accountTypes = [
 const ParentComponent = () => {
   useRenderCount("ParentComponent", true);
   const [productDetailComponents, setproductDetailComponents] = useState([]);
-
+  console.log(
+    "productDetailComponents",
+    JSON.stringify(productDetailComponents)
+  );
   const handleAdd = useCallback((accountType, quantity) => {
     const newproductDetailComponent = {
       id: Date.now(),
-      accountTypeCode: accountType.code,
+      accountTypeCode: accountType.code.toString(),
       accountDescription: accountType.description,
       quantity,
       nickname: accountType.description,
@@ -35,9 +38,13 @@ const ParentComponent = () => {
     const newComponent = { ...componentToCopy, id: Date.now() };
     setproductDetailComponents([...productDetailComponents, newComponent]);
   };
-  const handleDelete = () => {
-    setproductDetailComponents(
-      productDetailComponents.filter((id) => productDetailComponents.id !== id)
+  const handleDelete = (id) => {
+    setproductDetailComponents((prevState) =>
+      prevState.filter((component) => component.id !== id)
+    );
+    console.log(
+      "productDetailComponents_post",
+      JSON.stringify(productDetailComponents)
     );
   };
   return (

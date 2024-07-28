@@ -1,45 +1,42 @@
-import { memo, useState } from "react";
+import { memo, useRef } from "react";
 import { useRenderCount } from "./useRenderCount";
 import PropTypes from "prop-types";
+import { getAccountTypes } from "./productService";
 
-const ProductAddComponent = ({ accountTypes, onAdd }) => {
+const ProductAddComponent = ({ quantity, onAdd }) => {
   useRenderCount("ProductAddComponent", true);
-  const [accountType, setaccountType] = useState(accountTypes[0]);
-  const [quantity, setQuantity] = useState(1);
-
+  const accountTypes = getAccountTypes();
+  const quantityRef = useRef(0);
+  const accountTypeRef = useRef(accountTypes[0].code);
   const handleAdd = () => {
-    onAdd(accountType, quantity);
+    onAdd(
+      accountTypes.find((a) => a.code == accountTypeRef.current.value),
+      quantityRef.current.value
+    );
+    quantityRef.current.value = 0;
+    accountTypeRef.current.value = accountTypes[0].code;
   };
   return (
     <>
       {accountTypes && (
         <div>
-          <select
-            value={accountType.code}
-            onChange={(e) => {
-              const a = accountTypes.filter(
-                (acc) => acc.code == e.target.value
-              )[0];
-              setaccountType(a);
-            }}
-          >
+          <select ref={accountTypeRef}>
             {accountTypes.map((type, index) => (
               <option key={index} value={type.code}>
                 {type.description}
               </option>
             ))}
           </select>
-          <select
-            value={quantity}
-            onChange={(e) => {
-              setQuantity(e.target.value);
-            }}
-          >
-            {[...Array(10).keys()].map((num) => (
-              <option key={num + 1} value={num + 1}>
-                {num + 1}
-              </option>
-            ))}
+          <select ref={quantityRef}>
+            <option key={0} value={0}>
+              Please select
+            </option>
+            {quantity &&
+              [...Array(quantity).keys()].map((num) => (
+                <option key={num + 1} value={num + 1}>
+                  {num + 1}
+                </option>
+              ))}
           </select>
           <button onClick={handleAdd}>Add</button>
         </div>
@@ -49,12 +46,13 @@ const ProductAddComponent = ({ accountTypes, onAdd }) => {
 };
 
 ProductAddComponent.propTypes = {
-  accountTypes: PropTypes.arrayOf(
-    PropTypes.shape({
-      code: PropTypes.number.isRequired,
-      description: PropTypes.string.isRequired,
-    })
-  ).isRequired,
   onAdd: PropTypes.func.isRequired,
+  quantity: PropTypes.number.isRequired,
 };
+
+// const propsAreqEqual = (prevProps, nextProps) => {
+//   console.log(prevProps.onAdd === nextProps.onAdd);
+//   console.log(prevProps.quantity === nextProps.quantity);
+//   return false;
+// };
 export default memo(ProductAddComponent);

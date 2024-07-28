@@ -1,11 +1,11 @@
+import { memo } from "react";
 import { useRenderCount } from "./useRenderCount";
 import PropTypes from "prop-types";
+import { getOwnershipTypes } from "./productService";
 
-const ownershipTypes = ["Individual", "Joint", "Corporate"];
-
+const ownershipTypes = getOwnershipTypes();
 const ProductDetailComponent = ({ component, onDelete, onUpdate, onCopy }) => {
-  const { id, accountTypeCode, accountDescription, nickname, ownershipType } =
-    component;
+  const { id, accountDescription, nickname, ownershipType } = component;
   useRenderCount(`ProductDetailComponent-${accountDescription}-${id}`, true);
   const handleDelete = () => onDelete(id);
   const handleCopy = () => onCopy(component);
@@ -15,9 +15,7 @@ const ProductDetailComponent = ({ component, onDelete, onUpdate, onCopy }) => {
   return (
     <div>
       <h3>
-        {accountDescription}
-        {id}
-        {accountTypeCode}
+        {accountDescription}-{id}
       </h3>
       <input
         name="nickname"
@@ -54,5 +52,11 @@ ProductDetailComponent.propTypes = {
   onUpdate: PropTypes.func.isRequired,
   onCopy: PropTypes.func.isRequired,
 };
-
-export default ProductDetailComponent;
+// const propsAreEqual = (prevProps, nextProps) => {
+//   console.log(prevProps.component === nextProps.component);
+//   console.log(prevProps.onCopy === nextProps.onCopy);
+//   console.log(prevProps.onDelete === nextProps.onDelete);
+//   console.log(prevProps.onUpdate === nextProps.onUpdate);
+//   return true;
+// };
+export default memo(ProductDetailComponent);

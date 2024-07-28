@@ -1,15 +1,16 @@
 import { memo, useRef } from "react";
 import { useRenderCount } from "./useRenderCount";
 import PropTypes from "prop-types";
-import { getAccountTypes } from "./productService";
+import useStore from "./store";
 
-const ProductAddComponent = ({ quantity, onAdd }) => {
+const ProductAddComponent = ({ quantity }) => {
   useRenderCount("ProductAddComponent", true);
-  const accountTypes = getAccountTypes();
+  const accountTypes = useStore((state) => state.accountTypes);
+  const addProduct = useStore((state) => state.addProduct);
   const quantityRef = useRef(0);
   const accountTypeRef = useRef(accountTypes[0].code);
   const handleAdd = () => {
-    onAdd(
+    addProduct(
       accountTypes.find((a) => a.code == accountTypeRef.current.value),
       quantityRef.current.value
     );
@@ -46,7 +47,6 @@ const ProductAddComponent = ({ quantity, onAdd }) => {
 };
 
 ProductAddComponent.propTypes = {
-  onAdd: PropTypes.func.isRequired,
   quantity: PropTypes.number.isRequired,
 };
 

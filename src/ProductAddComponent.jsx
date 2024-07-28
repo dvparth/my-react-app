@@ -1,22 +1,31 @@
-import { memo, useRef } from "react";
+import { memo, useCallback, useRef } from "react";
 import { useRenderCount } from "./useRenderCount";
 import PropTypes from "prop-types";
 import useStore from "./store";
 
 const ProductAddComponent = ({ quantity }) => {
-  useRenderCount("ProductAddComponent", true);
   const accountTypes = useStore((state) => state.accountTypes);
   const addProduct = useStore((state) => state.addProduct);
   const quantityRef = useRef(0);
   const accountTypeRef = useRef(accountTypes[0].code);
-  const handleAdd = () => {
-    addProduct(
-      accountTypes.find((a) => a.code == accountTypeRef.current.value),
-      quantityRef.current.value
-    );
-    quantityRef.current.value = 0;
-    accountTypeRef.current.value = accountTypes[0].code;
-  };
+
+  const handleAddClick = useCallback(() => {
+    if (!accountTypes || !quantity) {
+      console.error("Error: accountTypes or quantity is undefined or null");
+      return;
+    }
+    const handleAdd = () => {
+      addProduct(
+        accountTypes.find((a) => a.code === accountTypeRef.current.value),
+        quantityRef.current.value
+      );
+      quantityRef.current.value = 0;
+      accountTypeRef.current.value = accountTypes[0].code;
+    };
+
+    handleAdd();
+  }, [addProduct, accountTypes, accountTypeRef, quantityRef]);
+
   return (
     <>
       {accountTypes && (
@@ -39,7 +48,7 @@ const ProductAddComponent = ({ quantity }) => {
                 </option>
               ))}
           </select>
-          <button onClick={handleAdd}>Add</button>
+          <button onClick={handleAddClick}>Add</button>
         </div>
       )}
     </>

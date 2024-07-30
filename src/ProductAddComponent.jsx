@@ -1,5 +1,13 @@
+import {
+  Box,
+  Button,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
+
 import { memo, useCallback, useRef } from "react";
-import { useRenderCount } from "./useRenderCount";
 import PropTypes from "prop-types";
 import useStore from "./store";
 
@@ -27,31 +35,43 @@ const ProductAddComponent = ({ quantity }) => {
   }, [addProduct, accountTypes, accountTypeRef, quantityRef]);
 
   return (
-    <>
+    <Box mt={4}>
       {accountTypes && (
-        <div>
-          <select ref={accountTypeRef}>
-            {accountTypes.map((type, index) => (
-              <option key={index} value={type.code}>
-                {type.description}
-              </option>
-            ))}
-          </select>
-          <select ref={quantityRef}>
-            <option key={0} value={0}>
-              Please select
-            </option>
-            {quantity &&
-              [...Array(quantity).keys()].map((num) => (
-                <option key={num + 1} value={num + 1}>
-                  {num + 1}
-                </option>
+        <>
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Account Type</InputLabel>
+            <Select
+              inputRef={accountTypeRef}
+              defaultValue={accountTypes[0].code}
+            >
+              {accountTypes.map((type, index) => (
+                <MenuItem key={index} value={type.code}>
+                  {type.description}
+                </MenuItem>
               ))}
-          </select>
-          <button onClick={handleAddClick}>Add</button>
-        </div>
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Quantity</InputLabel>
+            <Select inputRef={quantityRef} defaultValue={0}>
+              <MenuItem key={0} value={0}>
+                Please select
+              </MenuItem>
+              {quantity &&
+                [...Array(quantity).keys()].map((num) => (
+                  <MenuItem key={num + 1} value={num + 1}>
+                    {num + 1}
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
+          <Button variant="contained" color="primary" onClick={handleAddClick}>
+            Add
+          </Button>
+        </>
       )}
-    </>
+    </Box>
   );
 };
 

@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { Box, Typography, Container, Button } from "@mui/material";
 import ProductDetailComponent from "./ProductDetailComponent";
 import ProductAddComponent from "./ProductAddComponent";
 import { useRenderCount } from "./useRenderCount";
@@ -13,7 +13,10 @@ const ParentComponent = () => {
   const copyProduct = useStore((state) => state.copyProduct);
 
   return (
-    <div>
+    <Container>
+      <Box mb={4}>
+        <Typography variant="h4">Account Management</Typography>
+      </Box>
       {renderedProducts &&
         renderedProducts.map((renderedProduct) => (
           <ProductDetailComponent
@@ -29,14 +32,16 @@ const ParentComponent = () => {
           10 - renderedProducts.length > 0 ? 10 - renderedProducts.length : 0
         }
       />
-      <button
+      <Button
+        variant="contained"
+        color="secondary"
         onClick={() => {
           console.log(JSON.stringify(renderedProducts));
         }}
       >
         Show
-      </button>
-    </div>
+      </Button>
+    </Container>
   );
 };
 export default ParentComponent;
